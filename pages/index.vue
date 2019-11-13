@@ -4,9 +4,10 @@
       获取过来的分页数据应该是一个数组，遍历该数组，并且循环生成文章的摘要
     -->
     <div id="abstract" v-for="abstract in index" :key="abstract.slug">
-      <!--获取标题，并且为其添加链接，这里使用了-->
+      <!--获取标题，并且为其添加链接，这里用“+”号将'post/'字符串和slug变量进行拼接-->
+      <!--这里利用nuxt-link组件来生成超链接，相关内容可以参考https://zh.nuxtjs.org/api/components-nuxt-link/-->
       <h2>
-        <nuxt-link :to="{ name: 'post-article', params: { article:abstract.slug } }">
+        <nuxt-link :to="'post/'+ abstract.slug ">
           {{ abstract.title }}</nuxt-link>
       </h2>
       <div id="articleinfo">
