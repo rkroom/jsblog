@@ -54,7 +54,7 @@ export default {
         slug: params.article  //参数 ?slug=params.article，生成的完整链接为：http://127.0.0.1:8080/api/article?slug=params.article
       }
     })
-    return { article: data, tagsign: data.tags[0] ? true : false }  //返回获取到的数据，利用三元运算来判断是否存在标签
+    return { article: data.data, tagsign: data.data.tags[0] ? true : false }  //返回获取到的数据，利用三元运算来判断是否存在标签
   }
 }
 </script>
