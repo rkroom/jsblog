@@ -49,7 +49,7 @@ export default {
   关于nuxt路由的内容可以参考：https://zh.nuxtjs.org/guide/routing/
   */
   async asyncData ({ $axios, params }) {
-    const data = await $axios.$get('http://127.0.0.1:8080/api/article', { //使用get方法访问接口
+    const data = await $axios.$get('/api/article', { //使用get方法访问接口
       params: {
         slug: params.article  //参数 ?slug=params.article，生成的完整链接为：http://127.0.0.1:8080/api/article?slug=params.article
       }

@@ -1,41 +1,33 @@
 <template>
   <div>
-    <!--
-      获取过来的分页数据应该是一个数组，遍历该数组，并且循环生成文章的摘要
-    -->
-    <div id="abstract" v-for="abstract in index" :key="abstract.slug">
-      <!--获取标题，并且为其添加链接，这里用“+”号将'post/'字符串和slug变量进行拼接-->
-      <!--这里利用nuxt-link组件来生成超链接，相关内容可以参考https://zh.nuxtjs.org/api/components-nuxt-link/-->
-      <h2>
-        <nuxt-link :to="'post/'+ abstract.slug ">
-          {{ abstract.title }}</nuxt-link>
-      </h2>
-      <div id="articleinfo">
-        <ul>
-          <!--获取作者-->
-          <li> {{ abstract.username }} </li>
-          <!--获取发布日期-->
-          <li>{{ abstract.publishdate  }}</li>
-          <!--获取分类目录-->
-          <li>分类目录：{{ abstract.category }}</li>
-        </ul>
-      </div>
-      <!--获取文章摘要-->
-      {{ abstract.content }}...
-    </div>
+    <!--使用组件的方式为<组件名></组件名>，通过“:参数”=数据的方法进行传值，这些值将会传递到子组件
+    总体文章分页路径为“/page/”-->
+    <pagingIndex :index="index" :articleNum="articleNum" :route="'/page/'"></pagingIndex>
   </div>
 </template>
 
 <script>
+import pagingIndex from '@/components/pagingindex' //引入pagingIndex组件，@代表根目录
+
 export default {
   name: 'Index',
+  components: {  //注册组件，如果不注册，组件无法使用
+    pagingIndex
+  },
+  data () {
+    return {
+    }
+  },
   async asyncData ({ $axios }) {
-    const data = await $axios.$get(`http://127.0.0.1:8080/api/index`, {
+    // 获取首页数据
+    const data = await $axios.$get(`/api/index`, {
       params: {
         page: 1
       }
     })
-    return { index: data.data }
+    // 获取文章数量
+    const articleNum = await $axios.$get(`/api/articleNum`)
+    return { index: data.data, articleNum: articleNum.data }
   }
 }
 </script>

@@ -48,6 +48,18 @@ export default {
   ** See https://axios.nuxtjs.org/options
   */
   axios: {
+    Credentials: true,
+    prefix: '/api/',
+    proxy: true
+  },
+  proxy: {
+    '/api/': {
+      target: 'http://127.0.0.1:8080/',
+      changeOrigin: true,
+      pathRewrite: {
+        '^/api': ''
+      }
+    }
   },
   /*
   ** Build configuration

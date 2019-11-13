@@ -1,55 +1,28 @@
 <template>
   <div>
-    <nuxt />
+    <el-row>
+      <!--导航相关配置-->
+      <el-menu class="index-menu" mode="horizontal">
+        <el-menu-item index="index">
+          <!--首页-->
+          <nuxt-link :to="'/'">rkroom.com</nuxt-link>
+        </el-menu-item>
+        <!--分类目录-->
+        <el-menu-item index="spring boot2">
+          <!--主体内容在这个区域-->
+          <nuxt-link :to="'/category/spring boot2/1'">spring boot2</nuxt-link>
+        </el-menu-item>
+      </el-menu>
+    </el-row>
+    <el-row class="blank">
+      <!--主体内容在这个区域-->
+      <nuxt />
+    </el-row>
   </div>
 </template>
 
+<script>
+</script>
+
 <style>
-html {
-  font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-size: 16px;
-  word-spacing: 1px;
-  -ms-text-size-adjust: 100%;
-  -webkit-text-size-adjust: 100%;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
-  box-sizing: border-box;
-}
-
-*,
-*:before,
-*:after {
-  box-sizing: border-box;
-  margin: 0;
-}
-
-.button--green {
-  display: inline-block;
-  border-radius: 4px;
-  border: 1px solid #3b8070;
-  color: #3b8070;
-  text-decoration: none;
-  padding: 10px 30px;
-}
-
-.button--green:hover {
-  color: #fff;
-  background-color: #3b8070;
-}
-
-.button--grey {
-  display: inline-block;
-  border-radius: 4px;
-  border: 1px solid #35495e;
-  color: #35495e;
-  text-decoration: none;
-  padding: 10px 30px;
-  margin-left: 15px;
-}
-
-.button--grey:hover {
-  color: #fff;
-  background-color: #35495e;
-}
 </style>
