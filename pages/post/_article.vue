@@ -25,6 +25,13 @@
 </template>
 
 <script>
+// 引入highlight.js及其样式
+import hljs from 'highlight.js'
+import 'highlight.js/styles/androidstudio.css'
+// 引入html标签高亮，将markup也设置为html样式
+import htmlbars from 'highlight.js/lib/languages/htmlbars'
+hljs.registerLanguage('markup', htmlbars)
+
 export default {
   name: 'Article', //组件名
   filters: {  //过滤器
@@ -55,9 +62,76 @@ export default {
       }
     })
     return { article: data.data, tagsign: data.data.tags[0] ? true : false }  //返回获取到的数据，利用三元运算来判断是否存在标签
+  },
+  mounted: function () {
+    // 将hljs注册为全局函数，highlightjs-line-numbers会在运行前检测hljs是存在
+    window.hljs = hljs
+    // 引入highlightjs-line-numbers
+    require('highlightjs-line-numbers.js')
+    //获取pre标签的元素，循环为其添加换行属性并使其高亮
+    document.querySelectorAll('pre').forEach((block) => {
+      // 换行
+      block.style.whiteSpace = "pre-wrap"
+      // 高亮
+      hljs.highlightBlock(block)
+      // 行号
+      hljs.lineNumbersBlock(block)
+    })
   }
 }
 </script>
 
+<style scoped>
+/* 添加边框线 */
+.article {
+  border-style: solid;
+  border-color: #ddd;
+  border-width: 1px;
+  padding: 5px;
+  margin: 5px;
+}
+#articleinfo ul {
+  margin: 0;
+  margin-top: 5px;
+  padding: 0;
+  color: #999;
+  text-align: left;
+  display: block;
+  list-style-type: none;
+}
+#articleinfo li {
+  display: inline-block;
+}
+#articleinfo li:first-child {
+  padding-right: 5px;
+}
+h2 {
+  padding: 0;
+  margin: 0;
+}
+</style>
+
 <style>
+/* for block of numbers */
+
+.hljs-ln-numbers {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  text-align: center;
+  color: #ccc;
+  border-right: 10px solid transparent;
+  vertical-align: top;
+  padding-right: 5px;
+}
+
+/* for block of code */
+.hljs-ln-code {
+  padding-left: 10px;
+  font-size: 15px;
+}
 </style>

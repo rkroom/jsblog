@@ -127,4 +127,40 @@ export default {
 </script>
 
 <style scoped>
+/* el-row属性中的el-button属性间距为2px */
+.el-row >>> .el-button {
+  margin: 2px;
+}
+#abstract {
+  margin-top: 15px;
+}
+/* articleinfo这个元素下面的ul/li在一行内横排显示*/
+#articleinfo ul {
+  padding: 0;
+  margin: 9px 0 0;
+  color: #999;
+  text-align: left;
+  display: block;
+  list-style-type: none;
+  margin-top: 0px;
+  margin-bottom: 5px;
+}
+#articleinfo li {
+  display: inline-block;
+}
+#articleinfo li:first-child {
+  padding-right: 5px;
+}
+h2 {
+  margin-top: 10px;
+  margin-bottom: 0px;
+  color: #555;
+  text-align: left;
+  font: bold 25px/1.1 "ff-tisa-web-pro", Cambria, "Times New Roman", Georgia,
+    Times, sans-serif;
+}
+/* 修改h2标签中的a标签颜色 */
+h2 a {
+  color: #000000;
+}
 </style>
