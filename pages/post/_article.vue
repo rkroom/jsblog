@@ -21,6 +21,36 @@
     </div>
     <!--显示正文，v-html会将标签渲染出来，在默认情况下，vue不会解析html标签以避免攻击-->
     <div v-html="article.content" />
+    <!--评论功能区域-->
+    <div class="comment">
+      <!--提交评论功能，由表单实现-->
+      <el-form ref="commentForm" :model="commentForm" label-width="80px" label-position="left" :rules="rules">
+        <el-form-item prop="author" label="名称" style="width:300px">
+          <el-input v-model="commentForm.author" placeholder="如何称呼您"></el-input>
+        </el-form-item>
+        <el-form-item prop="email" label="邮箱地址" style="width:300px">
+          <el-input v-model="commentForm.email" placeholder="邮箱地址不会被公开"></el-input>
+        </el-form-item>
+        <el-form-item prop="commentcontent" label="评论内容">
+          <!--设定评论的输入框大小会自动更改，最小为三行，最大为五行-->
+          <el-input v-model="commentForm.commentcontent" :autosize="{ minRows: 3, maxRows: 5}" type="textarea"
+            placeholder="内容">
+            >
+          </el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="commentSubmit('commentForm')">
+            提交评论
+          </el-button>
+          <el-button>取消</el-button>
+        </el-form-item>
+      </el-form>
+      <div v-for="comment in comments" :key="comment.id" class="commentinfo">
+        <p>作者：{{ comment.author }}</p>
+        内容：<p>{{ comment.commentcontent }}</p>
+        <p>时间：{{ comment.postdate | dateFormat }}</p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -44,6 +74,23 @@ export default {
       return timeFormat
     }
   },
+  data () {
+    return {
+      commentForm: {
+        author: '',
+        email: '',
+        commentcontent: '',
+        articles: {}
+      },
+      // 表单验证规则
+      rules: {
+        author: [{ required: true, message: '必填项目' }],
+        email: [{ required: true, message: '必填项目' }],
+        commentcontent: [{ required: true, message: '必填项目' }]
+      },
+      comments: {}
+    }
+  },
   /*
   asyncData可以在组件渲染之前获取一些数据，这里是从接口获取文章数据
   这里传递了$axios, params两个context变量的属性
@@ -63,6 +110,25 @@ export default {
     })
     return { article: data.data, tagsign: data.data.tags[0] ? true : false }  //返回获取到的数据，利用三元运算来判断是否存在标签
   },
+  methods: {
+    // 提交评论时执行的方法
+    commentSubmit (commentForm) {
+      this.$refs[commentForm].validate((valid) => {
+        if (valid) {
+          this.$axios.put(`/api/comment`, this.commentForm
+          ).then((result) => {
+            this.$alert(result.data.msg, '提示', {
+              confirmButtonText: '确定'
+            })
+          }).catch(() => {
+            this.$alert("提交失败，请检查输入", '提示', {
+              confirmButtonText: '确定'
+            })
+          })
+        }
+      })
+    }
+  },
   mounted: function () {
     // 将hljs注册为全局函数，highlightjs-line-numbers会在运行前检测hljs是存在
     window.hljs = hljs
@@ -77,6 +143,13 @@ export default {
       // 行号
       hljs.lineNumbersBlock(block)
     })
+    // 设定提交时评论对应文章的文章ID
+    this.commentForm.articles = { id: this.article.id }
+    this.$axios.$get(`/api/comment`, {
+      params: {
+        article: this.article.id
+      }
+    }).then(result => { this.comments = result.data })
   }
 }
 </script>
@@ -108,6 +181,17 @@ export default {
 h2 {
   padding: 0;
   margin: 0;
+}
+/*为评论添加边框线*/
+.comment {
+  padding: 10px;
+}
+.commentinfo {
+  border-style: solid;
+  border-color: #ddd;
+  border-width: 1px;
+  padding: 10px;
+  margin-bottom: 10px;
 }
 </style>
 

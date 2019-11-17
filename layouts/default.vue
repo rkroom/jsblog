@@ -80,7 +80,7 @@ a:active {
   flex-wrap: wrap;
   flex-direction: row;
   border: 1px #ddd;
-  border-style: solid solid none none;
+  border-style: none solid none none;
 }
 /* 左侧空白区域 */
 .blank {
@@ -90,7 +90,7 @@ a:active {
 /*侧边栏*/
 .rside {
   border: 1px #ddd;
-  border-style: solid none none none;
+  border-style: none none none none;
   padding: 10px;
 }
 /*取消链接下划线*/
