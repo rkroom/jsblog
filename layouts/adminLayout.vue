@@ -23,7 +23,7 @@
               <nuxt-link :to="'/admin/infomanage'">相关信息</nuxt-link>
             </el-menu-item>
             <el-menu-item>
-              <nuxt-link :to="'/'">rkroom.com</nuxt-link>
+              <nuxt-link :to="'/'">{{$store.state.siteinfo.title}}</nuxt-link>
             </el-menu-item>
           </el-menu>
         </el-col>
@@ -61,6 +61,11 @@ export default {
   //将auth作为中间件，访问该layout即会调用auth中间件
   middleware: 'auth',
   name: 'AdminLayout',
+  head () {
+    return {
+      title: this.$store.state.siteinfo.title + ' - ' + this.$store.state.siteinfo.subtitle
+    }
+  },
   methods: {
     //当点击导航栏时跳转
     handleSelect (value) {

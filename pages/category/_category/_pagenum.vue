@@ -16,6 +16,11 @@ export default {
   components: {
     pagingIndex
   },
+  head () {
+    return {
+      title: this.$store.state.siteinfo.title + ' - ' + this.$route.params.category + ' - 第' + this.$route.params.pagenum + '页'
+    }
+  },
   data () {
     return {
       //获取路径中的params参数category

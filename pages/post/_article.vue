@@ -64,6 +64,11 @@ hljs.registerLanguage('markup', htmlbars)
 
 export default {
   name: 'Article', //组件名
+  head () {
+    return {
+      title: this.article.title + ' - ' + this.article.categories.category + ' - ' + this.$store.state.siteinfo.title
+    }
+  },
   filters: {  //过滤器
     dateFormat: function (date) { //格式化日期
       const dateMat = new Date(date)

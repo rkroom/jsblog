@@ -80,6 +80,7 @@ export default {
   },
   mounted: function () {
     // 由于tinymce只在客户端运行，所以在进入客户端后再引入相关文件
+    // tinymce的插件是模块化的，需要使用某个插件都需要先引入某个插件
     if (process.client) {
       let tinymce = require('tinymce/tinymce')
       require('tinymce/skins/content/default/content.css')

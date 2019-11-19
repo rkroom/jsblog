@@ -9,12 +9,11 @@
       <el-menu class="index-menu" mode="horizontal" @select="handleSelect">
         <el-menu-item index="index">
           <!--首页-->
-          <nuxt-link :to="'/'">rkroom.com</nuxt-link>
+          <nuxt-link :to="'/'">{{$store.state.siteinfo.title}}</nuxt-link>
         </el-menu-item>
         <!--分类目录-->
-        <el-menu-item index="spring boot2">
-          <!--主体内容在这个区域-->
-          <nuxt-link :to="'/category/spring boot2/1'">spring boot2</nuxt-link>
+        <el-menu-item v-for="category in $store.state.categories" :key="category.category" :index="category.category">
+          <nuxt-link :to="'/category/'+category.category+'/1'">{{ category.category }}</nuxt-link>
         </el-menu-item>
       </el-menu>
     </el-row>
@@ -38,6 +37,8 @@
       </el-col>
       <!--侧边栏响应式区域-->
       <el-col :xs="0" :sm="2" :md="2" class="rside">
+        <nuxt-link v-if="$store.state.token.Authorization" :to="'/admin/articlepost'">管理<br></nuxt-link>
+        <nuxt-link v-if="$store.state.token.Authorization === null" :to="'/login'">登陆<br></nuxt-link>
       </el-col>
     </el-row>
   </div>
@@ -46,6 +47,11 @@
 <script>
 
 export default {
+  head () {
+    return {
+      title: this.$store.state.siteinfo.title + ' - ' + this.$store.state.siteinfo.subtitle
+    }
+  },
   methods: {
     handleSelect (value) { //处理导航栏选中事件，value为el-menu-item中设置的index的值
       if (value === 'index') {

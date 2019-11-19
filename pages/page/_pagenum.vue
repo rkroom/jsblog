@@ -13,6 +13,11 @@ export default {
   components: {
     pagingIndex
   },
+    head () {
+    return {
+      title: this.$store.state.siteinfo.title + ' - ' + this.$store.state.siteinfo.subtitle + ' - 第' + this.$route.params.pagenum + '页'
+    }
+  },
   async asyncData ({ $axios, params }) {
     // 获取所有文章的分页数据
     const data = await $axios.$get(`/api/index`, {

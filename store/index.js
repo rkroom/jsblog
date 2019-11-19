@@ -7,13 +7,21 @@ export const state = () => ({
     Authorization: null,
     username: null,
     userid: null
-  }
+  },
+  categories: [],
+  siteinfo: {}
 })
 
 // 获取数据方法
 export const getters = {
   getToken (state) {
     return state.token
+  },
+  getCategories (state) {
+    return state.categories
+  },
+  getSiteinfo (state) {
+    return state.siteinfo
   }
 }
 
@@ -21,6 +29,12 @@ export const getters = {
 export const mutations = {
   setToken (state, token) {
     state.token = token
+  },
+  setCategories (state, categories) {
+    state.categories = categories
+  },
+  setSiteinfo (state, siteinfo) {
+    state.siteinfo = siteinfo
   }
 }
 // 初始化数据方法
@@ -39,6 +53,10 @@ export const actions = {
       // 将用户信息更新
       // commit用以提交需要更新的数据，并指定更新的方法
       commit('setToken', token)
+      let indexcategory = await app.$axios.$get('/api/indexcategory')
+      commit('setCategories', indexcategory.data)
+      let siteinfo = await app.$axios.$get('/api/site')
+      commit('setSiteinfo', siteinfo.data)
     }
   }
 }
