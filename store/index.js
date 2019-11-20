@@ -50,13 +50,13 @@ export const actions = {
       const info = JSON.parse(Base64.decode(token.Authorization.split('.')[1]))
       token.username = info.username
       token.userid = info.id
-      // 将用户信息更新
-      // commit用以提交需要更新的数据，并指定更新的方法
       commit('setToken', token)
-      let indexcategory = await app.$axios.$get('/api/indexcategory')
-      commit('setCategories', indexcategory.data)
-      let siteinfo = await app.$axios.$get('/api/site')
-      commit('setSiteinfo', siteinfo.data)
     }
+    // 将用户信息更新
+    // commit用以提交需要更新的数据，并指定更新的方法
+    let indexcategory = await app.$axios.$get('/api/indexcategory')
+    commit('setCategories', indexcategory.data)
+    let siteinfo = await app.$axios.$get('/api/site')
+    commit('setSiteinfo', siteinfo.data)
   }
 }
