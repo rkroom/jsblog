@@ -39,6 +39,8 @@
       <el-col :xs="0" :sm="2" :md="2" class="rside">
         <nuxt-link v-if="$store.state.token.Authorization" :to="'/admin/articlepost'">管理<br></nuxt-link>
         <nuxt-link v-if="$store.state.token.Authorization === null" :to="'/login'">登陆<br></nuxt-link>
+        <!--关于页面，可由后台管理是否显示about，需要在数据库网站信息中添加showabout参数-->
+        <nuxt-link v-if="$store.state.siteinfo.showabout" :to="'/about'">关于</nuxt-link>
       </el-col>
     </el-row>
   </div>
