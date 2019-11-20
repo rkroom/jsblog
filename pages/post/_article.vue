@@ -1,26 +1,39 @@
 <template>
-  <div class="article">
-    <h2>
-      <!--显示标题-->
-      {{ article.title }}
-    </h2>
-    <div id="articleinfo">
-      <ul>
-        <!--获取作者-->
-        <li> {{ article.users.username }} </li>
-        <!--获取发布日期，并格式化，“|”是过滤符，会将前面的数据传递到后面的过滤器（filters）进行处理。-->
-        <li>{{ article.publishdate | dateFormat }}</li>
-        <!--获取分类目录-->
-        <li>分类目录：{{ article.categories.category }}</li>
-      </ul>
+  <div class="container">
+    <div class="article">
+      <h2>
+        <!--显示标题-->
+        {{ article.title }}
+      </h2>
+      <div id="articleinfo">
+        <ul>
+          <!--获取作者-->
+          <li> {{ article.users.username }} </li>
+          <!--获取发布日期，并格式化，“|”是过滤符，会将前面的数据传递到后面的过滤器（filters）进行处理。-->
+          <li>{{ article.publishdate | dateFormat }}</li>
+          <!--获取分类目录-->
+          <li>分类目录：{{ article.categories.category }}</li>
+        </ul>
+      </div>
+      <!--显示标签-->
+      <div class="tag">
+        <span v-if="tagsign" style="color:#330033;margin:0">标签：</span>
+        <span v-for="tag in article.tags" :key="tag.id">{{ tag.tag }}</span>
+      </div>
+      <!--显示正文，v-html会将标签渲染出来，在默认情况下，vue不会解析html标签以避免攻击-->
+      <div v-html="article.content" />
     </div>
-    <!--显示标签-->
-    <div class="tag">
-      <span v-if="tagsign" style="color:#330033;margin:0">标签：</span>
-      <span v-for="tag in article.tags" :key="tag.id">{{ tag.tag }}</span>
+    <!--上一页下一页-->
+    <div class="nextAndPrevious">
+      <nuxt-link v-if="nextAndPrevious.previous"
+        :to="{ name: 'post-article', params: { article:nextAndPrevious.previous.slug },query:nextAndPrevious.query }">
+        {{'上一篇：'+ nextAndPrevious.previous.title }}
+      </nuxt-link><br v-if="nextAndPrevious.previous" />
+      <nuxt-link v-if="nextAndPrevious.next"
+        :to="{ name: 'post-article', params: { article:nextAndPrevious.next.slug },query:nextAndPrevious.query }">
+        {{'下一篇：'+ nextAndPrevious.next.title }}
+      </nuxt-link>
     </div>
-    <!--显示正文，v-html会将标签渲染出来，在默认情况下，vue不会解析html标签以避免攻击-->
-    <div v-html="article.content" />
     <!--评论功能区域-->
     <div class="comment">
       <!--提交评论功能，由表单实现-->
@@ -93,7 +106,18 @@ export default {
         email: [{ required: true, message: '必填项目' }],
         commentcontent: [{ required: true, message: '必填项目' }]
       },
-      comments: {}
+      comments: {},
+      nextAndPrevious: {
+        next: {
+          slug: null,
+          title: null
+        },
+        previous: {
+          slug: null,
+          title: null
+        },
+        query: null
+      }
     }
   },
   /*
@@ -134,7 +158,23 @@ export default {
       })
     }
   },
-  mounted: function () {
+  mounted: async function () {
+    // 为文章添加前一篇后一篇按钮，利用async实现同步代码
+    const nextArticle = await this.$axios.$get('/api/nextarticle', {
+      params: {
+        id: this.article.id,
+        category: this.$route.query.category
+      }
+    })
+    const previousArticle = await this.$axios.$get('/api/previousarticle', {
+      params: {
+        id: this.article.id,
+        category: this.$route.query.category
+      }
+    })
+    this.nextAndPrevious.next = nextArticle.data
+    this.nextAndPrevious.previous = previousArticle.data
+    this.nextAndPrevious.query = { category: this.$route.query.category }
     // 将hljs注册为全局函数，highlightjs-line-numbers会在运行前检测hljs是存在
     window.hljs = hljs
     // 引入highlightjs-line-numbers
@@ -155,6 +195,13 @@ export default {
         article: this.article.id
       }
     }).then(result => { this.comments = result.data })
+    // 图片可能会超出显示框区域，将图片的宽度设置为显示框宽度
+    var mainWidth = document.getElementById("main").clientWidth
+    document.querySelectorAll('img').forEach((element) => {
+      if (element.clientWidth > mainWidth) {
+        element.style.width = "100%"
+      }
+    })
   }
 }
 </script>
