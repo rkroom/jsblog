@@ -43,6 +43,8 @@
         <nuxt-link v-if="Number($store.state.siteinfo.showabout)" :to="'/about'">关于</nuxt-link>
       </el-col>
     </el-row>
+    <div style="display:none" v-html="$store.state.siteinfo.customjs">
+    </div>
   </div>
 </template>
 
