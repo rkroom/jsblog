@@ -49,6 +49,8 @@ export default {
   },
   data () {
     return {
+      imgurl: null,
+      imgapikey: null,
       // 初始化配置
       // tinymce的配置说明：https://www.tiny.cloud/docs/configure
       init: {
@@ -73,12 +75,52 @@ export default {
           { text: 'C', value: 'c' },
           { text: 'C++', value: 'cpp' },
           { text: 'bash', value: 'bash' }
-        ]
+        ],
+        automatic_uploads: false,
+        // 图片上传
+        images_upload_handler: (blobInfo, success, failure) => {
+          if (this.imgurl !== null) {
+            let formData = new FormData()
+            formData.append('source', blobInfo.blob(), blobInfo.filename())
+            this.$axios({
+              method: 'post',
+              url: this.imgurl.value,
+              params: {
+                'key': this.imgapikey.value,
+              },
+              data: formData,
+              headers: {
+                'Content-Type': 'multipart/form-data'
+              }
+            }).then(result => {
+              success(result.data.image.url)
+            }).catch(result => {
+              failure('上传失败')
+            })
+          } else {
+            failure('请安装Chevereto，并获取API')
+          }
+        }
       },
       myValue: this.value
     }
   },
   mounted: function () {
+    // 获取图片上传api
+    this.$axios.$get('/api/admin/site', {
+      params: {
+        attribute: "imgurl"
+      }
+    }).then((result) => {
+      this.imgurl = result.data
+    })
+    this.$axios.$get('/api/admin/site', {
+      params: {
+        attribute: "imgapikey"
+      }
+    }).then((result) => {
+      this.imgapikey = result.data
+    })
     // 由于tinymce只在客户端运行，所以在进入客户端后再引入相关文件
     // tinymce的插件是模块化的，需要使用某个插件都需要先引入某个插件
     if (process.client) {
