@@ -129,7 +129,7 @@ export default {
     const categoriesData = await $axios.$get(`/api/admin/categories`)
     const tagsData = await $axios.$get(`/api/admin/tags`)
     const siteInfo = await $axios.$get('/api/admin/site')
-    return { categoriesData: categoriesData.data, tagsData: tagsData.dat, siteInfo: siteInfo.data }
+    return { categoriesData: categoriesData.data, tagsData: tagsData.data, siteInfo: siteInfo.data }
   },
   methods: {
     // 添加分类目录

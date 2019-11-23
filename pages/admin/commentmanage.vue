@@ -10,7 +10,7 @@
       <el-table-column prop="postdate" :formatter="dateFormat" label="日期" width="95">
       </el-table-column>
     </client-only>
-    <el-table-column prop="title" label="文章" width="400">
+    <el-table-column prop="articles.title" label="文章" width="400">
     </el-table-column>
     <el-table-column prop="commentcontent" label="内容" width="400">
     </el-table-column>
@@ -107,11 +107,11 @@ export default {
     dateFormat (row, column, cellValue, index) {
       const daterc = row[column.property]
       if (daterc != null) {
-        const dateMat = new Date(parseInt(daterc.toString().replace("/Date(", "").replace(")/", ""), 10))
+        const dateMat = new Date(daterc)
         const year = dateMat.getFullYear()
         const month = dateMat.getMonth() + 1
         const day = dateMat.getDate()
-        const timeFormat = year + "/" + month + "/" + day
+        const timeFormat = year + '/' + month + '/' + day
         return timeFormat
       }
     }
