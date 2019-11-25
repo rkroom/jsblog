@@ -1,33 +1,38 @@
 <template>
-  <!--评论的管理和文章的管理差不多，都是通过表格组件来实现的-->
-  <el-table :data="commentData" :fit="true" border style="width: 100%" :cell-style="cellStyle"
-    :row-class-name="tableRowClassName">
-    <el-table-column prop="author" label="作者" width="230">
-    </el-table-column>
-    <el-table-column prop="email" label="邮箱" width="230">
-    </el-table-column>
-    <client-only>
-      <el-table-column prop="postdate" :formatter="dateFormat" label="日期" width="95">
+  <div>
+    <!--评论的管理和文章的管理差不多，都是通过表格组件来实现的-->
+    <el-table :data="commentData" :fit="true" border style="width: 100%" :cell-style="cellStyle"
+      :row-class-name="tableRowClassName">
+      <el-table-column prop="author" label="作者" width="230">
       </el-table-column>
-    </client-only>
-    <el-table-column prop="articles.title" label="文章" width="400">
-    </el-table-column>
-    <el-table-column prop="commentcontent" label="内容" width="400">
-    </el-table-column>
-    <el-table-column label="审核">
-      <template slot-scope="scope">
-        <el-button v-if="scope.row.published === false" type="text" @click="handleStatus(scope.$index,scope.row)">
-          {{ scope.row.publishStatus }}</el-button>
-        <span v-if="scope.row.published">{{ scope.row.publishStatus }}</span>
-      </template>
-    </el-table-column>
-    <!--删除按钮固定悬浮在右侧-->
-    <el-table-column fixed="right" label="删除">
-      <template slot-scope="scope">
-        <el-button type="text" @click="handleDelete(scope.$index,scope.row)">删除</el-button>
-      </template>
-    </el-table-column>
-  </el-table>
+      <el-table-column prop="email" label="邮箱" width="230">
+      </el-table-column>
+      <client-only>
+        <el-table-column prop="postdate" :formatter="dateFormat" label="日期" width="100">
+        </el-table-column>
+      </client-only>
+      <el-table-column prop="articles.title" label="文章" width="400">
+      </el-table-column>
+      <el-table-column prop="commentcontent" label="内容" width="400">
+      </el-table-column>
+      <el-table-column label="审核">
+        <template slot-scope="scope">
+          <el-button v-if="scope.row.published === false" type="text" @click="handleStatus(scope.$index,scope.row)">
+            {{ scope.row.publishStatus }}</el-button>
+          <span v-if="scope.row.published">{{ scope.row.publishStatus }}</span>
+        </template>
+      </el-table-column>
+      <!--删除按钮固定悬浮在右侧-->
+      <el-table-column fixed="right" label="删除">
+        <template slot-scope="scope">
+          <el-button type="text" @click="handleDelete(scope.$index,scope.row)">删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <el-pagination background :hide-on-single-page="true" layout="prev, pager, next" :page-size="13"
+      :total="commentsNum" @current-change="handlePaging">
+    </el-pagination>
+  </div>
 </template>
 
 <script>
@@ -44,8 +49,13 @@ export default {
   },
   async asyncData ({ $axios }) {
     // 获取所有评论
-    const commentData = await $axios.$get(`/api/admin/allcomment`)
-    return { commentData: commentData.data }
+    const commentData = await $axios.$get(`/api/admin/comments`, {
+      params: {
+        page: 1
+      }
+    })
+    const commentsNum = await $axios.$get(`/api/admin/commentsnum`)
+    return { commentData: commentData.data, commentsNum: commentsNum.data }
   },
   methods: {
     // 为未发表评论添加样式
@@ -114,6 +124,26 @@ export default {
         const timeFormat = year + '/' + month + '/' + day
         return timeFormat
       }
+    },
+    // 分页
+    handlePaging (page) {
+      this.$axios.$get(`/api/admin/comments`, {
+        params: {
+          page: page
+        }
+      }).then((result) => {
+        this.commentData = result.data
+        this.commentData.forEach(element => {
+          if (element.published === false) {
+            element.publishStatus = "未发表"
+          } else {
+            element.publishStatus = "已发表"
+          }
+        })
+      })
+      this.$axios.$get(`/api/admin/commentsnum`).then((result) => {
+        this.commentsNum = result.data
+      })
     }
   },
   mounted: function () {

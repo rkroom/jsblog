@@ -26,7 +26,7 @@ export default {
       }
     })
     // 获取文章数量
-    const articleNum = await $axios.$get(`/api/articleNum`)
+    const articleNum = await $axios.$get(`/api/articlenum`)
     return { index: data.data, articleNum: articleNum.data }
   }
 }

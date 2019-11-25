@@ -13,7 +13,7 @@ export default {
   components: {
     pagingIndex
   },
-    head () {
+  head () {
     return {
       title: this.$store.state.siteinfo.title + ' - ' + this.$store.state.siteinfo.subtitle + ' - 第' + this.$route.params.pagenum + '页'
     }
@@ -26,7 +26,7 @@ export default {
       }
     })
     // 获取文章数量
-    const articleNum = await $axios.$get(`/api/articleNum`)
+    const articleNum = await $axios.$get(`/api/articlenum`)
     return { index: data.data, articleNum: articleNum.data, currentPage: Number(params.pagenum) }
   }
 }
