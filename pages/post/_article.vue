@@ -187,6 +187,11 @@ export default {
       hljs.highlightBlock(block)
       // 行号
       hljs.lineNumbersBlock(block)
+      // 如果行高高于672 则设置滑块
+      if (block.clientHeight >= 672) {
+        block.style.height = "42em"
+        block.style.overflow = "auto"
+      }
     })
     // 设定提交时评论对应文章的文章ID
     this.commentForm.articles = { id: this.article.id }
