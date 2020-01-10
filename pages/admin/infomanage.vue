@@ -9,7 +9,7 @@
           <!--首页显示状态-->
           <el-table-column label="首页显示">
             <template slot-scope="scope">
-              <el-button type="text" @click="handleStatus(scope.$index,scope.row)">{{ scope.row.isindex}}
+              <el-button type="text" @click="handleStatus(scope.$index,scope.row)">{{ scope.row.index}}
               </el-button>
             </template>
           </el-table-column>
@@ -144,7 +144,7 @@ export default {
             this.$axios.put(`/api/admin/category`, {
               category: this.categoryFrom.addCategory
             }).then((result) => {
-              this.categoriesData.push({ category: this.categoryFrom.addCategory, isindex: result.data.data.isindex, id: result.data.data.id })
+              this.categoriesData.push({ category: this.categoryFrom.addCategory, index: result.data.data.index, id: result.data.data.id })
               this.$notify({
                 type: 'success',
                 message: result.data.msg
@@ -222,10 +222,10 @@ export default {
       }).then(() => {
         this.$axios.$post(`/api/admin/indexcategory`, {
           id: row.id,
-          status: !row.isindex
+          status: !row.index
         }).then((result) => {
           this.$store.commit('setCategories', result.data)
-          row.isindex = !row.isindex
+          row.index = !row.index
           this.$notify({
             type: 'success',
             message: result.msg
