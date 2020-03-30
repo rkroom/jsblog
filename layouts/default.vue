@@ -37,6 +37,8 @@
       </el-col>
       <!--侧边栏响应式区域-->
       <el-col :xs="0" :sm="2" :md="2" class="rside">
+        <el-input v-model="keyword" @keyup.enter.native="search" placeholder="搜索">
+        </el-input><el-button icon="el-icon-search" circle @click="search"></el-button><br>
         <nuxt-link v-if="$store.state.token.Authorization" :to="'/admin/articlepost'">管理<br></nuxt-link>
         <nuxt-link v-if="$store.state.token.Authorization === null" :to="'/login'">登陆<br></nuxt-link>
         <!--关于页面，可由后台管理是否显示about，需要在数据库网站信息中添加showabout参数-->
@@ -56,6 +58,11 @@ export default {
       title: this.$store.state.siteinfo.title + ' - ' + this.$store.state.siteinfo.subtitle
     }
   },
+  data() {
+    return {
+      keyword: ''
+    }
+  },
   methods: {
     handleSelect (value) { //处理导航栏选中事件，value为el-menu-item中设置的index的值
       if (value === 'index') {
@@ -63,6 +70,14 @@ export default {
       } else {
         this.$router.push('/category/' + value + '/1')
       }
+    },
+    search(){
+      if(this.keyword.length == 0){
+          this.$alert('请输入欲搜索的内容', '无效搜索', {
+          confirmButtonText: '确定',})
+          return
+      }
+      this.$router.push('/search/' + this.keyword + '/1')
     }
   }
 }
